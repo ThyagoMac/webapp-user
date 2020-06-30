@@ -1,10 +1,6 @@
 <template>
     <div>
         <h1>Lista de Usuários</h1>
-        <hr><br>
-
-
-        <hr><br>
         <hr>
         <el-table :data="users" style="width: 95%; margin: auto" >
             
@@ -31,22 +27,25 @@
 
                 <el-table-column
                 fixed="right"
-                label="Operations"
-                width="120">
+                label="Editar"
+                width="70">
                     <template slot-scope="scope">
-                        <el-button type="danger" icon="el-icon-delete" circle
-                        @click.native.prevent="deleteUser(scope.$index, users)">
+                        <el-button type="primary" icon="el-icon-edit" circle
+                            @click.native.prevent="deleteUser(scope.$index, users)">
                         </el-button>
                     </template>
                 </el-table-column>
 
-
-
-
-                <!-- <el-table-column >
-                    <el-button type="danger" icon="el-icon-delete" circle 
-                    @click="deleteUser(user)"></el-button>
-                </el-table-column> -->
+                <el-table-column
+                fixed="right"
+                label="Deletar"
+                width="70">
+                    <template slot-scope="scope">
+                        <el-button type="danger" icon="el-icon-delete" circle
+                            @click.native.prevent="deleteUser(scope.$index, users)">
+                        </el-button>
+                    </template>
+                </el-table-column>
         </el-table>
 
         <hr>
@@ -69,6 +68,27 @@ export default {
     computed: {
     },
     methods: {
+        deleteUser(index, users) {
+            this.$confirm('Tem certeza que deseja deletar esse usuário permanentemente???', 'Warning', {
+            confirmButtonText: 'Sim',
+            cancelButtonText: 'Não',
+            type: 'warning'
+            }).then(() => {
+                users.splice(index, 1);
+                localStorage.setItem("users", JSON.stringify(this.users));
+                this.$notify({
+                    title: 'Success',
+                    message: 'Usuário removido com sucesso!',
+                    type: 'success'
+                });
+            }).catch(() => {
+                this.$notify({
+                title: 'Warning',
+                message: 'Usuário não foi removido!',
+                type: 'warning'
+                });          
+            });
+        },
         loadUsers(){
             let userTemp = JSON.parse(localStorage.getItem("users"));
             if (!userTemp){
@@ -77,15 +97,16 @@ export default {
                 this.users = JSON.parse(localStorage.getItem("users"));
             }
         },
-        deleteUser(index, users) {
+
+        /* deleteUser(index, users) {
             users.splice(index, 1);
             localStorage.setItem("users", JSON.stringify(this.users));
             this.$notify({
-            title: 'Success',
+            title: 'Warning',
             message: 'Usuário removido com sucesso!',
-            type: 'success'
+            type: 'warning'
             });
-        }
+        } */
     },
     mounted() {
        // this.loadUsers();        
