@@ -40,7 +40,7 @@
                 let validName = value.match(noLetters);
 
                 if(validName){
-                    callback(new Error('Nome possui caracteres inválidos'));
+                    callback(new Error('Nome possui caracteres inválidos OU falta o sobre nome'));
                 }else{
                     callback();
                 }
@@ -133,9 +133,20 @@
             }
             
             console.log(this.users);
-            //alert('Cadastrado com sucesso!!!');
+            this.resetForm('ruleForm');
+            this.$notify({
+            title: 'Success',
+            message: 'Novo usuário cadastrado com sucesso!',
+            type: 'success'
+            });
+            //alert('Novo usuário cadastrado com sucesso!');
           } else {
-            console.log('Não foi possivel cadastrar!!!');
+
+            this.$notify.error({
+            title: 'Error',
+            message: 'Não foi possível cadastrar cheque se há algum erro.',
+            type: 'error'
+            });
             return false;
           }
         });
