@@ -1,8 +1,6 @@
 <template>
     <div>
         <h1>Novo Usuário</h1>
-    
-        
         <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="25%" class="user-form" size="medium">
             <el-form-item label="Nome Completo" prop="name">
                 <el-input v-model="ruleForm.name" ></el-input>
