@@ -2,14 +2,27 @@
     <div>
         <h1>Lista de Usuários</h1>
         <p>component Home.vue</p>
+
     </div>
 </template>
 
 <script>
 export default {
     
+    data() {
+        return {
+            users: []
+        }
+    },
+    computed: {
 
-
+    },
+    created() {
+        
+        users = JSON.parse(localStorage.getItem("users"));
+        console.log(users);
+        
+    }
 
 
 

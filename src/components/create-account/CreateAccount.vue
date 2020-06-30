@@ -7,7 +7,7 @@
             <el-form-item label="Nome Completo" prop="name">
                 <el-input v-model="ruleForm.name" ></el-input>
             </el-form-item>
-                <el-form-item label="Idade" prop="age">
+            <el-form-item label="Idade" prop="age">
                 <el-input v-model.number="ruleForm.age"></el-input>
             </el-form-item>
             <el-form-item label="Email" prop="email">
@@ -33,41 +33,56 @@
 <script>
   export default {
     data() {
+        var checkName = (rule, value, callback) => {
+            if (!value) {
+                return callback(new Error('Nome obrigatório'));
+            }else {
+                let noLetters = /^[A-Za-z]+$/;
+
+                let validName = value.match(noLetters);
+
+                if(validName){
+                    callback(new Error('Nome possui caracteres inválidos'));
+                }else{
+                    callback();
+                }
+            }
+        };
         var checkAge = (rule, value, callback) => {
             if (!value) {
-                return callback(new Error('Please input the age'));
-        }
-        setTimeout(() => {
-          if (!Number.isInteger(value)) {
-            callback(new Error('Apenas números'));
-          } else {
-            if (value < 18) {
-              callback(new Error('Precisa ser maior de idade'));
-            } else {
-              callback();
+                return callback(new Error('Idade obrigatória'));
             }
-          }
-        }, 1000);
-      };
-      var validatePass = (rule, value, callback) => {
-        if (value === '') {
-          callback(new Error('Um password é necessário'));
-        } else {
-          if (this.ruleForm.checkPass !== '') {
-            this.$refs.ruleForm.validateField('checkPass');
-          }
-          callback();
-        }
-      };
-      var validatePass2 = (rule, value, callback) => {
-        if (value === '') {
-          callback(new Error('Repita o password'));
-        } else if (value !== this.ruleForm.pass) {
-          callback(new Error('Password incorreto!!! Repita o mesmo password'));
-        } else {
-          callback();
-        }
-      };
+            setTimeout(() => {
+                if (!Number.isInteger(value)) {
+                    callback(new Error('Apenas números'));
+                } else {
+                    if (value < 18) {
+                    callback(new Error('Precisa ser maior de idade'));
+                    } else {
+                    callback();
+                    }
+                }
+            }, 1000);
+        };
+        var validatePass = (rule, value, callback) => {
+            if (value === '') {
+            callback(new Error('Um password é necessário'));
+            } else {
+            if (this.ruleForm.checkPass !== '') {
+                this.$refs.ruleForm.validateField('checkPass');
+            }
+            callback();
+            }
+        };
+        var validatePass2 = (rule, value, callback) => {
+            if (value === '') {
+            callback(new Error('Repita o password'));
+            } else if (value !== this.ruleForm.pass) {
+            callback(new Error('Password incorreto!!! Repita o mesmo password'));
+            } else {
+            callback();
+            }
+        };
       return {
         ruleForm: {
             name: '',
@@ -81,7 +96,7 @@
         users: [],
         rules: {
             name: [
-                { required: true }
+                { required: true, validator: checkName, trigger: 'blur' }
             ],
             age: [
                 { required: true, validator: checkAge, trigger: 'blur' }
