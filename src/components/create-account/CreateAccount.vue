@@ -5,8 +5,19 @@
             <el-form-item label="Nome Completo" prop="name">
                 <el-input v-model="ruleForm.name" ></el-input>
             </el-form-item>
-            <el-form-item label="Idade" prop="age">
-                <el-input v-model.number="ruleForm.age"></el-input>
+            <el-form-item label="Data de Nascimento" prop="age">
+            
+                <el-date-picker
+                style="width: 100%"
+                v-model="ruleForm.age"
+                type="date"
+                placeholder="Data de Nascimento"
+                format="dd/MM/yyyy"
+                value-format="dd-MM-yyyy"
+                :picker-options="pickerOptions"
+                :default-value="checkDate">
+                </el-date-picker>
+            
             </el-form-item>
             <el-form-item label="Email" prop="email">
                 <el-input v-model="ruleForm.email"></el-input>
@@ -37,9 +48,10 @@ import UserService from '../../domain/user/UserService.js';
             if (!value) {
                 return callback(new Error('Nome obrigatório'));
             }else {
-                let noLetters = /^[A-Za-z]+$/;
+                //let noLetters = /^[A-Za-z]+$/;
+                let noLetters = /^([A-Z]+[a-z]+\s)*[A-Z]+[a-z]+$/;
 
-                let validName = value.match(noLetters);
+                let validName = !value.match(noLetters);
 
                 if(validName){
                     callback(new Error('Nome possui caracteres inválidos OU falta o sobre nome'));
@@ -50,10 +62,40 @@ import UserService from '../../domain/user/UserService.js';
         };
         var checkAge = (rule, value, callback) => {
             if (!value) {
-                return callback(new Error('Idade obrigatória'));
+                return callback(new Error('Data de Nascimento obrigatória'));
+            } else {
+                callback();
             }
+            }
+            /*
             setTimeout(() => {
-                if (!Number.isInteger(value)) {
+                let toDay = new Date().toDateString();
+                let tempDate = new Date(value);
+                console.log(tempDate);
+                
+                console.log(toDay);
+                if(toDay<=value){
+                    return callback(new Error('Data de Nascimento inválida'));
+                }
+                /* 
+                var toDay = new Date().toDateString();
+                var data2 = new Date('07/04/2017').toDateString();
+
+                console.log(hoje)
+                console.log(data2)
+
+                if (hoje > data2) {
+                console.log('Hoje é maior que data2')
+                } else if (hoje == data2) {
+                console.log('Hoje é igual a data2')
+                } else {
+                console.log('Hoje é menor que data2')
+                } 
+                */
+
+
+
+                /* if (!Number.isInteger(value)) {
                     callback(new Error('Apenas números'));
                 } else {
                     if (value < 18) {
@@ -61,9 +103,9 @@ import UserService from '../../domain/user/UserService.js';
                     } else {
                     callback();
                     }
-                }
-            }, 1000);
-        };
+                } */
+        /*     }, 1000);
+        }; */
         var validatePass = (rule, value, callback) => {
             let lowerCase = new RegExp(/[a-z]/i);
             let upperCase = new RegExp("[A-Z]");
@@ -109,6 +151,7 @@ import UserService from '../../domain/user/UserService.js';
             checkPass: '',
             registerDate: ''
         },
+        checkDate: {},
         id: this.$route.params.id ,
         users: [],
         rules: {
@@ -131,7 +174,15 @@ import UserService from '../../domain/user/UserService.js';
             checkPass: [
                 { required: true, validator: validatePass2, trigger: 'blur' }
             ],
-        }
+        },
+        pickerOptions: {
+          disabledDate(time) {
+            let date = new Date();
+            date.setTime(date.getTime() - 3600 * 1000 * 24 * 7 * 939)
+            return time.getTime() > date;
+          }
+        },
+ 
       };
     },
     methods: {
@@ -176,6 +227,10 @@ import UserService from '../../domain/user/UserService.js';
       }
     },
     created() {
+
+        this.checkDate = new Date();
+        this.checkDate.setTime(this.checkDate.getTime() - 3600 * 1000 * 24 * 7 * 939)
+
         this.service = new UserService();
 
         if(this.id){

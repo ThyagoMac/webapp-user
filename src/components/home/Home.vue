@@ -1,53 +1,60 @@
 <template>
     <div>
         <h1>Lista de Usuários</h1>
+
         <hr>
         <el-table :data="users" style="width: 95%; margin: auto" >
             
-                <el-table-column
-                    prop="registerDate"
-                    label="Inscrito em">
-                </el-table-column>
-                <el-table-column
-                    prop="name"
-                    label="Nome">
-                </el-table-column>
-                <el-table-column
-                    prop="age"
-                    label="Idade">
-                </el-table-column>
-                <el-table-column
-                    prop="email"
-                    label="Email">
-                </el-table-column>
-                <el-table-column
-                    prop="login"
-                    label="Conta">
-                </el-table-column>
+            <el-table-column
+                sortable
+                prop="registerDate"
+                label="Inscrito em">
+            </el-table-column>
+            <el-table-column
+                sortable
+                prop="name"
+                label="Nome">
+            </el-table-column>
+            <el-table-column
+                sortable
+                prop="age"
+                label="Nascido Em">
+            </el-table-column>
+            <el-table-column
+                sortable
+                prop="email"
+                label="Email">
+            </el-table-column>
+            <el-table-column
+                sortable
+                prop="login"
+                label="Conta">
+            </el-table-column>
 
-                <el-table-column
-                fixed="right"
-                label="Editar"
-                width="70">
-                    <!-- <router-link :to="{ name : 'createaccount' }"> -->
-                        <template slot-scope="scope">
-                            <el-button type="primary" icon="el-icon-edit" circle
-                                @click.native.prevent="editUser(scope.$index)">
-                            </el-button>
-                        </template>
-                    <!-- </router-link> -->
-                </el-table-column>
-
-                <el-table-column
-                fixed="right"
-                label="Deletar"
-                width="70">
+            <el-table-column
+            fixed="right"
+            label="Editar"
+            width="70">
+                <!-- <router-link :to="{ name : 'createaccount' }"> -->
                     <template slot-scope="scope">
-                        <el-button type="danger" icon="el-icon-delete" circle
-                            @click.native.prevent="deleteUser(scope.$index, users)">
+                        <el-button type="primary" icon="el-icon-edit" circle
+                            @click.native.prevent="editUser(scope.$index)">
                         </el-button>
                     </template>
-                </el-table-column>
+                <!-- </router-link> -->
+            </el-table-column>
+
+            <el-table-column
+            fixed="right"
+            label="Deletar"
+            width="70"
+            :formatter="formatter">
+                <template slot-scope="scope">
+                    <el-button type="danger" icon="el-icon-delete" circle
+                        @click.native.prevent="deleteUser(scope.$index, users)">
+                    </el-button>
+                </template>
+            </el-table-column>
         </el-table>
         <hr>
         <br>
@@ -65,7 +72,24 @@ export default {
     
     data() {
         return {
-            users: []
+            users: [],
+            tableData: [{
+            date: '2016-05-03',
+            name: 'zom',
+            address: 'No. 189, Grove St, Los Angeles'
+            }, {
+            date: '2016-05-02',
+            name: 'aom',
+            address: 'No. 189, Grove St, Los Angeles'
+            }, {
+            date: '2016-05-04',
+            name: 'com',
+            address: 'No. 189, Grove St, Los Angeles'
+            }, {
+            date: '2016-05-01',
+            name: 'bom',
+            address: 'No. 189, Grove St, Los Angeles'
+            }]
         }
     },
     computed: {
@@ -104,6 +128,9 @@ export default {
             this.$router.push({
                 name: 'altera', params: { id: index }
             });
+        },
+        formatter(row) {
+        return row.address;
         }
     },
     created() {
