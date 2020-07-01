@@ -29,11 +29,13 @@
                 fixed="right"
                 label="Editar"
                 width="70">
-                    <template slot-scope="scope">
-                        <el-button type="primary" icon="el-icon-edit" circle
-                            @click.native.prevent="deleteUser(scope.$index, users)">
-                        </el-button>
-                    </template>
+                    <!-- <router-link :to="{ name : 'createaccount' }"> -->
+                        <template slot-scope="scope">
+                            <el-button type="primary" icon="el-icon-edit" circle
+                                @click.native.prevent="editUser(scope.$index)">
+                            </el-button>
+                        </template>
+                    <!-- </router-link> -->
                 </el-table-column>
 
                 <el-table-column
@@ -47,17 +49,18 @@
                     </template>
                 </el-table-column>
         </el-table>
-
         <hr>
         <br>
-
-        <el-button type="primary" icon="el-icon-edit" circle @click="loadUsers()"></el-button>
-
-
+        <router-link :to="{name: 'createaccount'}">
+            <el-button type="primary" icon="el-icon-edit" circle></el-button>
+        </router-link>
+        <!-- <el-button type="primary" icon="el-icon-edit" circle @click="loadUsers()"></el-button> -->
     </div>
 </template>
 
 <script>
+import UserService from '../../domain/user/UserService.js';
+
 export default {
     
     data() {
@@ -68,14 +71,13 @@ export default {
     computed: {
     },
     methods: {
-        deleteUser(index, users) {
+        deleteUser(index, users) {             
             this.$confirm('Tem certeza que deseja deletar esse usuário permanentemente???', 'Warning', {
             confirmButtonText: 'Sim',
             cancelButtonText: 'Não',
             type: 'warning'
             }).then(() => {
-                users.splice(index, 1);
-                localStorage.setItem("users", JSON.stringify(this.users));
+                this.users = this.service.deleteUser(index, users);
                 this.$notify({
                     title: 'Success',
                     message: 'Usuário removido com sucesso!',
@@ -87,29 +89,26 @@ export default {
                 message: 'Usuário não foi removido!',
                 type: 'warning'
                 });          
-            });
+            }); 
         },
         loadUsers(){
-            let userTemp = JSON.parse(localStorage.getItem("users"));
+            this.users = this.service.loadUsers();
+            /* let userTemp = JSON.parse(localStorage.getItem("users"));
             if (!userTemp){
                 console.log("Users vazio");
             } else {
                 this.users = JSON.parse(localStorage.getItem("users"));
-            }
+            } */
         },
-
-        /* deleteUser(index, users) {
-            users.splice(index, 1);
-            localStorage.setItem("users", JSON.stringify(this.users));
-            this.$notify({
-            title: 'Warning',
-            message: 'Usuário removido com sucesso!',
-            type: 'warning'
+        editUser(index){
+            this.$router.push({
+                name: 'altera', params: { id: index }
             });
-        } */
+        }
     },
-    mounted() {
-       // this.loadUsers();        
+    created() {
+        this.service = new UserService();
+        this.loadUsers();
     }
 
 
@@ -133,11 +132,5 @@ export default {
 </script>
 
 <style scoped>
-.table-user {
-    border-top: 1px solid gray;
-    /* border: 1px solid black; */
-    border-collapse: collapse;
-    border-radius: 1px;
-}
 
 </style>

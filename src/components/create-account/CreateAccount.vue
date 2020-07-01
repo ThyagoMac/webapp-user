@@ -29,6 +29,8 @@
 </template>
 
 <script>
+import UserService from '../../domain/user/UserService.js';
+
   export default {
     data() {
         var checkName = (rule, value, callback) => {
@@ -63,57 +65,30 @@
             }, 1000);
         };
         var validatePass = (rule, value, callback) => {
+            let lowerCase = new RegExp(/[a-z]/i);
+            let upperCase = new RegExp("[A-Z]");
+            let specialChar = new RegExp(/[^a-z0-9]/i);
+            let number = new RegExp(/[0-9]/i);
+            
             if (value === '') {
-            callback(new Error('Um password é necessário'));
-            } else {
+                callback(new Error('Um password é necessário'));
+            } else if (value.length < 6) {
+                callback(new Error('O password é precisa conter mais que 6 dígitos'));
+            } else if (!number.test(value)){
+                callback(new Error('O password precisa conter pelo menos 1 número'));
+            } else if (!lowerCase.test(value)) {
+                callback(new Error('O password precisa conter pelo menos 1 dígitos em minúsculo'));
+            } else if (!upperCase.test(value)){
+                callback(new Error('O password precisa conter pelo menos 1 dígito em maiúsculo'));
+            } else if (!specialChar.test(value)){
+                callback(new Error('O password precisa conter pelo menos 1 caractere especial (@, !, #) '));
+            } 
+            else {
             if (this.ruleForm.checkPass !== '') {
                 this.$refs.ruleForm.validateField('checkPass');
             }
             callback();
             }
-/* 
-            $('#senha').bind('keyup', function () {
-        var pass = $(this).val();
-        var forca = 0;
-
-        if (pass.length > 10) {
-            forca = forca + 25;
-        }
-
-        var box = new RegExp(/[a-z]/i);
-        if (box.test(pass)) {
-            forca = forca + 25;
-        }
-
-        var box = new RegExp(/[0-9]/i);
-        if (box.test(pass)) {
-            forca = forca + 25;
-        }
-
-        var box = new RegExp(/[^a-z0-9]/i);
-        if (box.test(pass)) {
-            forca = forca + 25;
-        }
-
-        if (forca == 25) {
-
-            $('#forca').removeClass().addClass('pessima').html("Péssima");
-        }
-        if (forca == 50) {
-            $('#forca').removeClass().addClass('ruim').html("Ruim");
-        }
-        if (forca == 75) {
-            $('#forca').removeClass().addClass('boa').html("Aceitavel");
-        }
-        if (forca == 100) {
-            $('#forca').removeClass().addClass('otima').html("Excelente");
-        }
-    });
-     */
-
-
-
-
         };
         var validatePass2 = (rule, value, callback) => {
             if (value === '') {
@@ -134,6 +109,7 @@
             checkPass: '',
             registerDate: ''
         },
+        id: this.$route.params.id ,
         users: [],
         rules: {
             name: [
@@ -162,27 +138,28 @@
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            let userTemp = JSON.parse(localStorage.getItem("users"));
-            var data = new Date();
-            this.ruleForm.registerDate = (data.getDate() + "/" + data.getMonth() + "/" + data.getFullYear());
-            
-            if (!userTemp){
-                this.users.push(this.ruleForm);
-                localStorage.setItem("users", JSON.stringify(this.users));
+            if(this.id){
+                //this.users = this.ruleForm;
+                this.service.editUser(this.id, this.ruleForm);
+                this.$notify({
+                title: 'Success',
+                message: 'Usuário alterado com sucesso!',
+                type: 'success'
+                });
             } else {
-                this.users = JSON.parse(localStorage.getItem("users"));
-                this.users.push(this.ruleForm);
-                localStorage.setItem("users", JSON.stringify(this.users));
+                let data = new Date();
+                this.ruleForm.registerDate = (data.getDate() + "/" + data.getMonth() + "/" + data.getFullYear());
+                //this.users = this.ruleForm;
+                this.service.addUser(this.ruleForm);
+                //this.resetForm('ruleForm');  <--- reseta o formulario se for ficar na mesma pagina!!!
+                this.$notify({
+                title: 'Success',
+                message: 'Novo usuário cadastrado com sucesso!',
+                type: 'success'
+                });
             }
+            this.$router.push({ name: 'home' }); //<--Leva para home!
             
-            console.log(this.users);
-            this.resetForm('ruleForm');
-            this.$notify({
-            title: 'Success',
-            message: 'Novo usuário cadastrado com sucesso!',
-            type: 'success'
-            });
-            //alert('Novo usuário cadastrado com sucesso!');
           } else {
 
             this.$notify.error({
@@ -197,6 +174,14 @@
       resetForm(formName) {
         this.$refs[formName].resetFields();
       }
+    },
+    created() {
+        this.service = new UserService();
+
+        if(this.id){
+            let user = this.service.getUser(this.id);
+            this.ruleForm = user;
+        }
     }
   }
 </script>

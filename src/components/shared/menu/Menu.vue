@@ -32,6 +32,6 @@ a {
     top: 0;
     position: -webkit-sticky; /* Safari */
     position: sticky;
-    z-index: 1;
+    z-index: 5;
 }
 </style>

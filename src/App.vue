@@ -20,7 +20,7 @@ export default {
   },
   data() {
       return {
-        routes
+        routes : routes.filter(route => route.menu)
       }
     },
     methods: {
@@ -46,7 +46,7 @@ export default {
   transition: opacity 0.5s;
 }
 .page-leave-active {
-  transition: opacity 0.1s;
+  transition: opacity 0.3s;
 }
 
 </style>
