@@ -137,24 +137,6 @@ export default {
         this.service = new UserService();
         this.loadUsers();
     }
-
-
-
-    /* 
-    var hoje = new Date().toDateString();
-    var data2 = new Date('07/04/2017').toDateString();
-
-    console.log(hoje)
-    console.log(data2)
-
-    if (hoje > data2) {
-    console.log('Hoje é maior que data2')
-    } else if (hoje == data2) {
-    console.log('Hoje é igual a data2')
-    } else {
-    console.log('Hoje é menor que data2')
-    } 
-    */
 }
 </script>
 

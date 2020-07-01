@@ -66,46 +66,8 @@ import UserService from '../../domain/user/UserService.js';
             } else {
                 callback();
             }
-            }
-            /*
-            setTimeout(() => {
-                let toDay = new Date().toDateString();
-                let tempDate = new Date(value);
-                console.log(tempDate);
-                
-                console.log(toDay);
-                if(toDay<=value){
-                    return callback(new Error('Data de Nascimento inválida'));
-                }
-                /* 
-                var toDay = new Date().toDateString();
-                var data2 = new Date('07/04/2017').toDateString();
+        }
 
-                console.log(hoje)
-                console.log(data2)
-
-                if (hoje > data2) {
-                console.log('Hoje é maior que data2')
-                } else if (hoje == data2) {
-                console.log('Hoje é igual a data2')
-                } else {
-                console.log('Hoje é menor que data2')
-                } 
-                */
-
-
-
-                /* if (!Number.isInteger(value)) {
-                    callback(new Error('Apenas números'));
-                } else {
-                    if (value < 18) {
-                    callback(new Error('Precisa ser maior de idade'));
-                    } else {
-                    callback();
-                    }
-                } */
-        /*     }, 1000);
-        }; */
         var validatePass = (rule, value, callback) => {
             let lowerCase = new RegExp(/[a-z]/i);
             let upperCase = new RegExp("[A-Z]");
