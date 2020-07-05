@@ -79,15 +79,14 @@ import UserService from '../../domain/user/UserService.js';
                         return callback(new Error('Email já utilizado. Tente outro'));
                     }
                 }
-                callback();
             } else {  
                 for (let i=0; userTemp.length > i; i++){
                     if(userTemp[i].email == this.ruleForm.email){
                         return callback(new Error('Email já utilizado. Tente outro'));
                     }
                 }
-                callback();
             }
+            callback();
         }
 
         var checkLogin = (rule, value, callback) => {
@@ -101,7 +100,6 @@ import UserService from '../../domain/user/UserService.js';
                         return callback(new Error('Login já utilizado. Tente outro apelido'));
                     }
                 }
-                callback();
             }
             else {
                 for (let i=0; userTemp.length > i; i++){
@@ -109,8 +107,8 @@ import UserService from '../../domain/user/UserService.js';
                         return callback(new Error('Login já utilizado. Tente outro apelido'));
                     }
                 }
-                callback();
             }
+            callback();
         }
 
         var validatePass = (rule, value, callback) => {
@@ -141,11 +139,11 @@ import UserService from '../../domain/user/UserService.js';
         };
         var validatePass2 = (rule, value, callback) => {
             if (value === '') {
-            callback(new Error('Repita o password'));
+                callback(new Error('Repita o password'));
             } else if (value !== this.ruleForm.pass) {
-            callback(new Error('Password incorreto!!! Repita o mesmo password'));
+                callback(new Error('Password incorreto!!! Repita o mesmo password'));
             } else {
-            callback();
+                callback();
             }
         };
       return {
@@ -249,5 +247,8 @@ import UserService from '../../domain/user/UserService.js';
 </script>
 
 <style scoped>
-
+.user-form {
+    width: 85%;
+    margin: auto;
+}
 </style>
