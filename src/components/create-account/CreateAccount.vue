@@ -69,11 +69,19 @@ import UserService from '../../domain/user/UserService.js';
         }
 
         var checkEmail = (rule, value, callback) =>{
+            let userTemp = JSON.parse(localStorage.getItem("users"));
+            let i = 0;
             if (!value) {
                 return callback(new Error('Email obrigatório'));
-            } else {
-                let userTemp = JSON.parse(localStorage.getItem("users"));
-                let i = 0;
+            } else if (this.id){
+                userTemp[this.id].email = '';
+                for (i=0; userTemp.length > i; i++){
+                    if(userTemp[i].email == this.ruleForm.email){
+                        return callback(new Error('Email já utilizado. Tente outro'));
+                    }
+                }
+                callback();
+            } else {  
                 for (i=0; userTemp.length > i; i++){
                     if(userTemp[i].email == this.ruleForm.email){
                         return callback(new Error('Email já utilizado. Tente outro'));
@@ -84,11 +92,20 @@ import UserService from '../../domain/user/UserService.js';
         }
 
         var checkLogin = (rule, value, callback) => {
+            let userTemp = JSON.parse(localStorage.getItem("users"));
+            let i = 0;
             if (!value) {
                 return callback(new Error('Login obrigatório'));
-            } else {
-                let userTemp = JSON.parse(localStorage.getItem("users"));
-                let i = 0;
+            } else if (this.id){
+                userTemp[this.id].login = '';
+                for (i=0; userTemp.length > i; i++){
+                    if(userTemp[i].login == this.ruleForm.login){
+                        return callback(new Error('Login já utilizado. Tente outro apelido'));
+                    }
+                }
+                callback();
+            }
+            else {
                 for (i=0; userTemp.length > i; i++){
                     if(userTemp[i].login == this.ruleForm.login){
                         return callback(new Error('Login já utilizado. Tente outro apelido'));
