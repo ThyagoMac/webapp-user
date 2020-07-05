@@ -38,7 +38,7 @@
                 <!-- <router-link :to="{ name : 'createaccount' }"> -->
                     <template slot-scope="scope">
                         <el-button type="primary" icon="el-icon-edit" circle
-                            @click.native.prevent="editUser(scope.$index)">
+                            @click.native.prevent="editUser(scope.$index, users)">
                         </el-button>
                     </template>
                 <!-- </router-link> -->
@@ -124,7 +124,9 @@ export default {
                 this.users = JSON.parse(localStorage.getItem("users"));
             } */
         },
-        editUser(index){
+        editUser(index, user){
+            console.log(index);
+            console.log(user);
             this.$router.push({
                 name: 'altera', params: { id: index }
             });

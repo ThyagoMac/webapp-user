@@ -20,7 +20,7 @@
             
             </el-form-item>
             <el-form-item label="Email" prop="email">
-                <el-input v-model="ruleForm.email"></el-input>
+                <el-input v-model="ruleForm.email" placeholder="exemplo@gmail.com"></el-input>
             </el-form-item>
             <el-form-item label="Apelido" prop="login">
                 <el-input v-model="ruleForm.login"></el-input>
@@ -59,11 +59,41 @@ import UserService from '../../domain/user/UserService.js';
                     callback();
                 }
             }
-        };
+        }
         var checkAge = (rule, value, callback) => {
             if (!value) {
                 return callback(new Error('Data de Nascimento obrigatória'));
             } else {
+                callback();
+            }
+        }
+
+        var checkEmail = (rule, value, callback) =>{
+            if (!value) {
+                return callback(new Error('Email obrigatório'));
+            } else {
+                let userTemp = JSON.parse(localStorage.getItem("users"));
+                let i = 0;
+                for (i=0; userTemp.length > i; i++){
+                    if(userTemp[i].email == this.ruleForm.email){
+                        return callback(new Error('Email já utilizado. Tente outro'));
+                    }
+                }
+                callback();
+            }
+        }
+
+        var checkLogin = (rule, value, callback) => {
+            if (!value) {
+                return callback(new Error('Login obrigatório'));
+            } else {
+                let userTemp = JSON.parse(localStorage.getItem("users"));
+                let i = 0;
+                for (i=0; userTemp.length > i; i++){
+                    if(userTemp[i].login == this.ruleForm.login){
+                        return callback(new Error('Login já utilizado. Tente outro apelido'));
+                    }
+                }
                 callback();
             }
         }
@@ -124,11 +154,11 @@ import UserService from '../../domain/user/UserService.js';
                 { required: true, validator: checkAge, trigger: 'blur' }
             ],
             email: [
-                { message: 'Insira seu email aqui', trigger: 'blur' },
-                { required: true, type: 'email', message: 'Email inválido', trigger: ['blur', 'change'] }
+                { required: true, validator: checkEmail, trigger: ['blur', 'change'] },
+                { type: 'email', message: 'Email inválido', trigger: ['blur', 'change'] },
             ],
             login: [
-                { required: true }
+                { required: true, validator: checkLogin }
             ],
             pass: [
                 { required: true, validator: validatePass, trigger: 'blur' }
