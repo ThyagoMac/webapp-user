@@ -1,9 +1,19 @@
 <template>
     <div>
         <h1>Lista de Usuários</h1>
+        <div class="filter">
 
+        <el-input
+            placeholder="Filtro"
+            v-model="filterName"
+            clearable>
+                <i slot="prefix" class="el-input__icon el-icon-search"></i>
+        </el-input>
+        </div>
+        <p>{{filterName}}</p>
         <hr>
-        <el-table :data="users" style="width: 95%; margin: auto" >
+        
+        <el-table :data="users.filter(data => !filterName || data.name.toLowerCase().includes(filterName.toLowerCase()))" style="width: 95%; margin: auto" >
             
             <el-table-column
                 sortable
@@ -73,26 +83,11 @@ export default {
     data() {
         return {
             users: [],
-            tableData: [{
-            date: '2016-05-03',
-            name: 'zom',
-            address: 'No. 189, Grove St, Los Angeles'
-            }, {
-            date: '2016-05-02',
-            name: 'aom',
-            address: 'No. 189, Grove St, Los Angeles'
-            }, {
-            date: '2016-05-04',
-            name: 'com',
-            address: 'No. 189, Grove St, Los Angeles'
-            }, {
-            date: '2016-05-01',
-            name: 'bom',
-            address: 'No. 189, Grove St, Los Angeles'
-            }]
+            filterName: ''
         }
     },
     computed: {
+
     },
     methods: {
         deleteUser(index, users) {             
@@ -143,5 +138,9 @@ export default {
 </script>
 
 <style scoped>
+    .filter {
+        text-align: right;
+        width: 20%;
 
+    }
 </style>

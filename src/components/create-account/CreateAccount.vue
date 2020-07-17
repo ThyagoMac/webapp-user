@@ -70,19 +70,20 @@ import UserService from '../../domain/user/UserService.js';
 
         var checkEmail = (rule, value, callback) =>{
             let userTemp = JSON.parse(localStorage.getItem("users"));
+            let errorMessage = 'Email já utilizado. Tente outro';
             if (!value) {
                 return callback(new Error('Email obrigatório'));
             } else if (this.id){
                 userTemp[this.id].email = '';
                 for (let i=0; userTemp.length > i; i++){
                     if(userTemp[i].email == this.ruleForm.email){
-                        return callback(new Error('Email já utilizado. Tente outro'));
+                        return callback(new Error(errorMessage));
                     }
                 }
             } else {  
                 for (let i=0; userTemp.length > i; i++){
                     if(userTemp[i].email == this.ruleForm.email){
-                        return callback(new Error('Email já utilizado. Tente outro'));
+                        return callback(new Error(errorMessage));
                     }
                 }
             }
@@ -91,20 +92,21 @@ import UserService from '../../domain/user/UserService.js';
 
         var checkLogin = (rule, value, callback) => {
             let userTemp = JSON.parse(localStorage.getItem("users"));
+            let errorMessage = 'Login já utilizado. Tente outro apelido';
             if (!value) {
                 return callback(new Error('Login obrigatório'));
             } else if (this.id){
                 userTemp[this.id].login = '';
                 for (let i=0; userTemp.length > i; i++){
                     if(userTemp[i].login == this.ruleForm.login){
-                        return callback(new Error('Login já utilizado. Tente outro apelido'));
+                        return callback(new Error(errorMessage));
                     }
                 }
             }
             else {
                 for (let i=0; userTemp.length > i; i++){
                     if(userTemp[i].login == this.ruleForm.login){
-                        return callback(new Error('Login já utilizado. Tente outro apelido'));
+                        return callback(new Error(errorMessage));
                     }
                 }
             }
@@ -229,7 +231,7 @@ import UserService from '../../domain/user/UserService.js';
       },
       resetForm(formName) {
         this.$refs[formName].resetFields();
-      }
+      },
     },
     created() {
 
